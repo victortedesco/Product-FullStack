@@ -1,0 +1,16 @@
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { HeaderComponent } from './shared/header/header.component';
+import { AngularToastifyModule, ToastService } from 'angular-toastify';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet, HeaderComponent, AngularToastifyModule],
+  providers: [ToastService],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
+})
+export class AppComponent {
+  title = 'Products Web | Victor Tedesco';
+}

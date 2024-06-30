@@ -1,0 +1,35 @@
+header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2.5em 0 2.5em;
+    background-color: black;
+    color: white;
+    height: 7.5em;
+}
+
+.title {
+  margin: 0;
+  font-size: 2.5em;
+}
+
+a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.nav {
+  font-size: 1.5em;
+  display: flex;
+  margin-right: 70%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.home {
+  padding-right: 1em;
+}
+
+.status {
+  font-size: 1.5em;
+}

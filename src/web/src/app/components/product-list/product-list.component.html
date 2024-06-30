@@ -1,0 +1,28 @@
+<div class="container">
+  <input type="text" (keypress)="searchProduct($event)" class="form-control search-input" #searchInput placeholder="🔍 Search..." />
+  @if (products!.length != 0) {
+  @for (product of products; track product.id){
+  <div class="product-display">
+    <div class="product-item">
+      <img src="{{ product.imageUrl }}" class="product-image" onerror="this.style.display='none'" />
+      <div class="product-details">
+        <p>{{ product.name }}</p>
+        <h1>{{ product.description }}</h1>
+      </div>
+      <div class="product-price">
+        <p>R${{ (product.price * (1 - product.discount / 100)).toFixed(2) }}</p>
+        @if (product.discount != 0) {
+        <h1><del>R$ {{ product.price.toFixed(2) }}</del> (-{{ product.discount }}%)</h1>
+        }
+      </div>
+      <div class="product-buttons">
+        <button class="edit-button" (mousedown)="editProduct(product.id)">✏️</button>
+        <button class="delete-button" (mousedown)="deleteProduct(product.id)">❌</button>
+      </div>
+    </div>
+  </div>
+  }
+  } @else {
+    <p class="no-content">The product list is empty!</p>
+  }
+</div>

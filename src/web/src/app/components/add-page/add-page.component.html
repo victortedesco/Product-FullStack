@@ -1,0 +1,35 @@
+<div class="container">
+  <p>Add product</p>
+  <form [formGroup]="productForm">
+    <div class="input-group">
+      <span class="input-group-text" id="inputEmoji">📷</span>
+      <input type="text" class="form-control image-url" formControlName="imageUrl" placeholder="Image URL"
+        aria-describedby="inputEmoji" />
+    </div>
+    <div class="input-group">
+      <span class="input-group-text" id="inputEmoji">📎</span>
+      <input type="text" class="form-control name" formControlName="name" placeholder="Name"
+        aria-describedby="inputEmoji" />
+    </div>
+    <div class="input-group">
+      <span class="input-group-text" id="inputEmoji">📝</span>
+      <input type="text" class="form-control name" formControlName="description" placeholder="Description"
+        aria-describedby="inputEmoji" />
+    </div>
+    <div class="input-group">
+      <span class="input-group-text" id="inputEmoji">💲</span>
+      <input type="number" class="form-control name" formControlName="price" placeholder="Price"
+        aria-describedby="inputEmoji" />
+    </div>
+    <div class="input-group">
+      <span class="input-group-text" id="inputEmoji">💯</span>
+      <input type="number" class="form-control name" formControlName="discount" placeholder="Discount"
+        aria-describedby="inputEmoji" />
+    </div>
+  </form>
+  <div class="d-flex justify-content-end space-between mt-3">
+    <button (mousedown)="productForm.reset()" class="btn btn-secondary">Reset</button>
+    <button type="submit" [disabled]="!productForm.valid" (mousedown)="addProduct()"
+      class="btn btn-primary">Add</button>
+  </div>
+</div>

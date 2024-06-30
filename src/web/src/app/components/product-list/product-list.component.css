@@ -1,0 +1,91 @@
+.title {
+  font-size: 2em;
+  margin-top: 1em;
+}
+
+p {
+  margin: 0;
+  font-size: 2em;
+  font-weight: 600;
+}
+
+.no-content {
+  text-align: center;
+  font-size: 1.5em;
+}
+
+h1 {
+  font-size: 1.25em;
+  font-weight: 300;
+}
+
+a {
+  margin-bottom: 1em;
+}
+
+.product-price {
+  display: flex;
+  flex-direction: column;
+  margin-right: 0.7em;
+  align-items: end;
+}
+
+.product-price p {
+  font-size: 1.75em;
+}
+
+.product-price h1 {
+  font-size: 1em;
+}
+
+.product-item {
+  border: 1px solid rgb(141, 141, 141);
+  width: 100%;
+  height: 5em;
+  display: flex;
+  align-items: center;
+  background-color: #eee;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.product-image {
+  mix-blend-mode: multiply;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  margin-right: 0.75em;
+}
+
+.product-details {
+  flex: 2;
+  display: grid;
+  align-items: end;
+}
+
+.product-buttons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.edit-button, .delete-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  margin-right: 0.5em;
+}
+
+.search-input {
+  background-color: white;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  width: 100%;
+  text-align: start;
+  height: 4em;
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+}

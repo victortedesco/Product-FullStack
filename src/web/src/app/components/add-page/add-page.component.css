@@ -1,0 +1,37 @@
+p {
+  font-size: 2em;
+  font-weight: 300;
+}
+
+.container {
+  margin-top: 2em;
+}
+
+button {
+  margin-left: 1em;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.input-group-text {
+  background-color: white;
+  border: none;
+  font-size: 1.1em;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2em;
+  height: 2em;
+}
+
+.form-control {
+  padding-left: 0.5em;
+  height: auto;
+  font-size: 1em;
+}
+
