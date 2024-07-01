@@ -10,12 +10,6 @@ namespace ProductAPI.Controllers
     {
         private readonly IProductRepository _productRepository = productRepository;
 
-        [HttpGet("status")]
-        public async Task<IActionResult> Status()
-        {
-            return await Task.FromResult(Ok("Hello world!"));
-        }
-
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

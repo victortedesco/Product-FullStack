@@ -1,10 +1,12 @@
 <div class="container">
-  <input type="text" (keypress)="searchProduct($event)" class="form-control search-input" #searchInput placeholder="🔍 Search..." />
+  <input type="text" (keypress)="searchProduct($event)" class="form-control search-input" #searchInput
+    placeholder="🔍 Search..." />
   @if (products!.length != 0) {
   @for (product of products; track product.id){
   <div class="product-display">
     <div class="product-item">
-      <img src="{{ product.imageUrl }}" class="product-image" onerror="this.style.display='none'" />
+      <a href="{{ product.imageUrl }}" target="_blank"><img src="{{ product.imageUrl }}" class="product-image"
+          onerror="this.style.display='none'" /></a>
       <div class="product-details">
         <p>{{ product.name }}</p>
         <h1>{{ product.description }}</h1>
@@ -23,6 +25,6 @@
   </div>
   }
   } @else {
-    <p class="no-content">The product list is empty!</p>
+  <p class="no-content">The product list is empty!</p>
   }
 </div>

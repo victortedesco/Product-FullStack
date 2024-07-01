@@ -19,10 +19,6 @@ h1 {
   font-weight: 300;
 }
 
-a {
-  margin-bottom: 1em;
-}
-
 .product-price {
   display: flex;
   flex-direction: column;

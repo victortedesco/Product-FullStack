@@ -8,36 +8,37 @@ import { Observable } from 'rxjs';
 })
 
 export class ProductService {
-  private url: string = "https://localhost:7226/api/product";
+  private url: string = "https://localhost:7226";
+  private api: string = "api/product";
 
   constructor(private http: HttpClient) { }
 
   getStatus() : Observable<string> {
-    return this.http.get<string>(this.url + "/status", { responseType: 'text' as 'json'});
+    return this.http.get<string>(`${this.url}/status`, { responseType: 'text' as 'json'});
   }
 
   getProducts() : Observable<Product[]> {
-    return this.http.get<Product[]>(this.url);
+    return this.http.get<Product[]>(`${this.url}/${this.api}`);
   }
 
   getProductByID(id: string) : Observable<Product> {
-    return this.http.get<Product>(this.url + `/id/${id}`);
+    return this.http.get<Product>(`${this.url}/${this.api}/id/${id}`);
   }
 
   getProductsByName(name: string) : Observable<Product[]> {
-    return this.http.get<Product[]>(this.url + `/name/${name}`);
+    return this.http.get<Product[]>(`${this.url}/${this.api}/name/${name}`);
   }
 
   addProduct(product: Product) : Observable<void> {
-    return this.http.post<void>(`${this.url}`, product);
+    return this.http.post<void>(`${this.url}/${this.api}`, product);
   }
 
   updateProduct(id: string, product: Product) : Observable<void> {
     console.log(product)
-    return this.http.put<void>(`${this.url}/${id}`, product);
+    return this.http.put<void>(`${this.url}/${this.api}/${id}`, product);
   }
 
   deleteProduct(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.url}/${id}`);
+    return this.http.delete<void>(`${this.url}/${this.api}/${id}`);
   }
 }
