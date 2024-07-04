@@ -4,15 +4,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ProductAPI.Data;
+using Product.Infrastructure.Data;
 
 #nullable disable
 
-namespace ProductAPI.Migrations
+namespace Product.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDataContext))]
-    [Migration("20240628041811_ThirdMigration")]
-    partial class ThirdMigration
+    [Migration("20240704171646_First-Migration")]
+    partial class FirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,22 +20,24 @@ namespace ProductAPI.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
 
-            modelBuilder.Entity("ProductAPI.Models.ProductModel", b =>
+            modelBuilder.Entity("Product.Domain.Models.ProductModel", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Discount")
+                    b.Property<uint>("Discount")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ImageUrl")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<double>("Price")

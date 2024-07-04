@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ProductAPI.Migrations
+namespace Product.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class FirstMigration : Migration
@@ -15,9 +16,11 @@ namespace ProductAPI.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    Price = table.Column<double>(type: "REAL", nullable: false)
+                    ImageUrl = table.Column<string>(type: "TEXT", nullable: true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    Price = table.Column<double>(type: "REAL", nullable: false),
+                    Discount = table.Column<uint>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

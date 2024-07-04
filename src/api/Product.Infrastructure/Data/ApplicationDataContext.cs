@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProductAPI.Models;
+using Product.Domain.Models;
 
-namespace ProductAPI.Data
+namespace Product.Infrastructure.Data
 {
     public class ApplicationDataContext(DbContextOptions options) : DbContext(options)
     {

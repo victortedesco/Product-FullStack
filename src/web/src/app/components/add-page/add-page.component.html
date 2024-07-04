@@ -28,8 +28,8 @@
     </div>
   </form>
   <div class="d-flex justify-content-end space-between mt-3">
-    <button (mousedown)="productForm.reset()" class="btn btn-secondary">Reset</button>
-    <button type="submit" [disabled]="!productForm.valid" (mousedown)="addProduct()"
+    <button (click)="productForm.reset()" class="btn btn-secondary">Reset</button>
+    <button type="submit" [disabled]="!productForm.valid" (click)="addProduct()"
       class="btn btn-primary">Add</button>
   </div>
 </div>

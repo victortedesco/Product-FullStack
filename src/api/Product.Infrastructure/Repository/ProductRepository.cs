@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProductAPI.Data;
-using ProductAPI.Models;
+using Product.Domain.Interfaces.Repository;
+using Product.Domain.Models;
+using Product.Infrastructure.Data;
 
-namespace ProductAPI.Repository
+namespace Product.Infrastructure.Repository
 {
     public class ProductRepository(ApplicationDataContext applicationDataContext) : IProductRepository
     {
@@ -13,7 +14,7 @@ namespace ProductAPI.Repository
             return await _products.AsNoTracking().ToListAsync();
         }
 
-        public async Task<ProductModel> GetById(Guid id)
+        public async Task<ProductModel?> GetById(Guid id)
         {
             return await _products.FindAsync(id);
         }

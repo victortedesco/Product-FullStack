@@ -22,7 +22,7 @@ export class UpdatePageComponent implements OnInit, OnDestroy {
     id: new FormControl(''),
     imageUrl: new FormControl(''),
     name: new FormControl('', Validators.required),
-    description: new FormControl(''),
+    description: new FormControl('', Validators.required),
     price: new FormControl('', [Validators.required, Validators.min(0), Validators.pattern(/^\d+(\.\d{1,2})?$/)]),
     discount: new FormControl('', [Validators.required, Validators.min(0), Validators.max(80), Validators.pattern(/^\d+$/)])
   });
@@ -59,7 +59,6 @@ export class UpdatePageComponent implements OnInit, OnDestroy {
 
   convertToProduct(): Product {
     let product: Product = {
-      id: this.productId ?? "",
       imageUrl: this.productForm.get('imageUrl')?.value ?? "",
       name: this.productForm.get('name')?.value ?? "",
       description: this.productForm.get('description')?.value ?? "",
@@ -77,7 +76,7 @@ export class UpdatePageComponent implements OnInit, OnDestroy {
   updateProduct(): void {
     let product = this.convertToProduct()
 
-    this.productService.updateProduct(product.id, product)
+    this.productService.updateProduct(this.productId!, product)
       .subscribe({
         next: () => {
           this.toastService.success("Product updated sucessfully!")

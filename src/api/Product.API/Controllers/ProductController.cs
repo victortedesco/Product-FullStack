@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ProductAPI.Models;
-using ProductAPI.Repository;
+using Product.Domain.Interfaces.Repository;
+using Product.Domain.Models;
 
-namespace ProductAPI.Controllers
+namespace Product.API.Controllers
 {
     [Route("api/product")]
     [ApiController]
@@ -11,6 +11,8 @@ namespace ProductAPI.Controllers
         private readonly IProductRepository _productRepository = productRepository;
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(IEnumerable<ProductModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll()
         {
             var products = await _productRepository.GetAll();
@@ -22,6 +24,8 @@ namespace ProductAPI.Controllers
         }
 
         [HttpGet("id/{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProductModel), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             var product = await _productRepository.GetById(id);
@@ -33,6 +37,8 @@ namespace ProductAPI.Controllers
         }
 
         [HttpGet("name/{name}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(IEnumerable<ProductModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetByName([FromRoute] string name)
         {
             var products = await _productRepository.GetByName(name);
@@ -44,6 +50,8 @@ namespace ProductAPI.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProductModel), StatusCodes.Status201Created)]
         public async Task<IActionResult> Add([FromBody] ProductModel product)
         {
             if (!await _productRepository.Add(product))
@@ -53,6 +61,9 @@ namespace ProductAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] ProductModel product)
         {
             if (await _productRepository.GetById(id) == null)
@@ -65,6 +76,8 @@ namespace ProductAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
             if (!await _productRepository.Delete(id))
