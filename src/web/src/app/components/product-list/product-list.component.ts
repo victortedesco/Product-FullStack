@@ -54,7 +54,6 @@ export class ProductListComponent implements OnInit, OnDestroy {
         },
         error: () => {
           this.products = [];
-          this.toastService.error("Can't connect to the API!");
         }
       });
   }
@@ -63,10 +62,11 @@ export class ProductListComponent implements OnInit, OnDestroy {
     this.router.navigate(['/update', { id: JSON.stringify(productId) }]);
   }
 
-  deleteProduct(id: string): void {
-    this.productService.deleteProduct(id).subscribe(() => {
+  deleteProduct(productId: string): void {
+
+    this.productService.deleteProduct(productId).subscribe(() => {
       this.toastService.info("Product deleted!");
-      this.getProducts();
+      this.products = this.products.filter(arrProduct => productId !== arrProduct.id!)
     });
   }
 
