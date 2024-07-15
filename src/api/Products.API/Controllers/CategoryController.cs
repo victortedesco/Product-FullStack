@@ -1,9 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Products.API.Abstractions.Categories.Commands.Add;
+using Products.API.Abstractions.Categories.Commands.Delete;
+using Products.API.Abstractions.Categories.Commands.Update;
+using Products.API.Abstractions.Categories.Queries.GetAll;
+using Products.API.Abstractions.Categories.Queries.GetByCreatedAt;
+using Products.API.Abstractions.Categories.Queries.GetById;
+using Products.API.Abstractions.Categories.Queries.GetByName;
+using Products.API.Abstractions.Categories.Queries.GetByUpdatedAt;
 using Products.API.ViewModels;
 using Products.Domain.DTOs;
 using Products.Domain.Entities;
-using Products.Domain.Interfaces;
-using Products.Domain.Interfaces.Repository;
 
 namespace Products.API.Controllers;
 
@@ -11,21 +18,24 @@ namespace Products.API.Controllers;
 [ApiController]
 public class CategoryController : ControllerBase
 {
-    private readonly ICategoryRepository _categoryRepository;
-    private readonly IUnitOfWork _unitOfWork;
+    private readonly ISender _sender;
 
-    public CategoryController(ICategoryRepository categoryRepository)
+    public CategoryController(ISender sender)
     {
-        _categoryRepository = categoryRepository;
-        _unitOfWork = categoryRepository.UnitOfWork;
+        _sender = sender;
     }
 
     [HttpGet]
+    [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(IEnumerable<CategoryViewModel>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll()
     {
-        var categories = await _categoryRepository.GetAllAsync();
+        var command = new GetAllCategoriesQuery();
+
+        var result = await _sender.Send(command);
+
+        var categories = result.Value;
 
         if (!categories.Any())
             return NoContent();
@@ -33,81 +43,114 @@ public class CategoryController : ControllerBase
         return Ok(categories.Select(c => CategoryViewModel.FromModel(c)));
     }
 
-    [HttpGet("id/{id}")]
+    [HttpGet("id/{id:guid}")]
+    [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(CategoryViewModel), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
-        var category = await _categoryRepository.GetByIdAsync(id);
+        var command = new GetCategoryByIdQuery(id);
+        var result = await _sender.Send(command);
 
-        if (category is null)
-            return NotFound();
+        return result.IsSuccess ? Ok(CategoryViewModel.FromModel(result.Value)) : NotFound();
+    }
 
-        return Ok(CategoryViewModel.FromModel(category));
+    [HttpGet("createdAt/{date:datetime}")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(IEnumerable<CategoryViewModel>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetByCreatedAt(DateOnly date)
+    {
+        var command = new GetCategoriesByCreatedAtQuery(date);
+
+        var result = await _sender.Send(command);
+        var categories = result.Value;
+
+        if (!categories.Any())
+            return NoContent();
+
+        return Ok(categories.Select(c => CategoryViewModel.FromModel(c)));
+    }
+
+    [HttpGet("updatedAt/{date:datetime}")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(IEnumerable<CategoryViewModel>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetByUpdatedAt(DateOnly date)
+    {
+        var command = new GetCategoriesByUpdatedAtQuery(date);
+
+        var result = await _sender.Send(command);
+        var categories = result.Value;
+
+        if (!categories.Any())
+            return NoContent();
+
+        return Ok(categories.Select(c => CategoryViewModel.FromModel(c)));
     }
 
     [HttpGet("name/{name}")]
+    [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(CategoryViewModel), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetByName([FromRoute] string name)
     {
-        var category = await _categoryRepository.GetByNameAsync(name);
+        var command = new GetCategoryByNameQuery(name);
 
-        if (category is null)
-            return NotFound();
+        var result = await _sender.Send(command);
 
-        return Ok(CategoryViewModel.FromModel(category));
+        return result.IsSuccess ? Ok(CategoryViewModel.FromModel(result.Value)) : NotFound();
     }
 
     [HttpPost]
+    [Produces("application/json")]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(CategoryViewModel), StatusCodes.Status201Created)]
     public async Task<IActionResult> Add([FromBody] CategoryDTO categoryRequest)
     {
-        var category = Category.FromDTO(categoryRequest);
+        var command = new AddCategoryCommand(categoryRequest);
 
-        var result = await _categoryRepository.AddAsync(category);
+        var result = await _sender.Send(command);
 
-        if (result != "Ok")
-            return BadRequest(result);
+        if (result.IsFailed)
+            return BadRequest(result.ToString());
 
-        await _unitOfWork.SaveAsync();
+        var category = result.Value;
 
         return CreatedAtAction(nameof(GetById), new { id = category.Id }, CategoryViewModel.FromModel(category));
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:guid}")]
+    [Produces("text/plain")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] CategoryDTO categoryRequest)
     {
-        var product = Category.FromDTO(categoryRequest);
+        var command = new UpdateCategoryCommand(id, categoryRequest);
+        var result = await _sender.Send(command);
 
-        var result = await _categoryRepository.UpdateAsync(id, product);
-
-        if (result == "Not Found")
+        if (result.Errors.Contains(CategoryErrors.DoesNotExist))
             return NotFound();
 
-        if (result != "Ok")
-            return BadRequest(result);
-
-        await _unitOfWork.SaveAsync();
+        if (result.IsFailed)
+            return BadRequest(result.ToString());
 
         return Ok();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:guid}")]
+    [Produces("text/plain")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Delete([FromRoute] Guid id)
     {
-        var deleted = await _categoryRepository.DeleteAsync(id);
+        var command = new DeleteCategoryCommand(id);
 
-        if (!deleted)
+        var result = await _sender.Send(command);
+
+        if (result.Errors.Contains(CategoryErrors.DoesNotExist))
             return NotFound();
-
-        await _unitOfWork.SaveAsync();
 
         return Ok();
     }
